@@ -1,0 +1,66 @@
+﻿@using AIWM.Web.Connection
+@using AIWM.Model
+@inject IUserApi UserApi
+
+<div class="pattern form-margins">
+    <div class="container text-center table-display">
+        <div class="box-container py-5 px-5">
+            <div class="pageblock">
+                <div class="formblock">
+                    <form method="POST"
+                          class="form-signin"
+                          @onsubmit="LoginSubmit">
+                        <h1 class="form-heading">Login</h1>
+
+                        <div class="form-group">
+                            <input name="name"
+                                   type="text"
+                                   class="form-control"
+                                   placeholder="Username"
+                                   @bind="LoginString" />
+                        </div>
+                        <div class="form-group">
+                            <input name="password"
+                                   type="password"
+                                   class="form-control"
+                                   placeholder="Password"
+                                   @bind="PasswordString" />
+                        </div>
+                        <button class="btn btn-lg btn-primary btn-block"
+                                type="submit">
+                            Login
+                        </button>
+                        <h6 class="text-center pt-3">
+                            <a href="/resetPassword">Reset Password</a>
+                        </h6>
+                        <h6 class="text-center">
+                            <a href="/resetValidation">Resend Activation Token</a>
+                        </h6>
+                        <h6 class="text-center">
+                            <a href="/registration">Create an account</a>
+                        </h6>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    private string LoginString { get; set; }
+    private string PasswordString { get; set; }
+
+    private async Task LoginSubmit()
+    {
+        User user = new User();
+        user.Login = LoginString;
+        user.Password = PasswordString;
+        var response = await UserApi.Login(user);
+        System.Diagnostics.Debug.WriteLine(response);
+
+        var response2 = await UserApi.FindUserByName("Steve");
+        System.Diagnostics.Debug.WriteLine(response2.Email);
+    }
+}
